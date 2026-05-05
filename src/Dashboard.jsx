@@ -1,43 +1,14 @@
 import { useEffect, useState } from "react";
+const token = localStorage.getItem("token");
+
+if (!token) {
+  alert("Login first");
+  window.location.href = "YOUR_MFA_LOGIN_URL"; // 🔥 redirect to MFA
+}
 
 function Dashboard() {
   const [riskData, setRiskData] = useState(null);
-  const [users, setUsers] = useState([]);
-  const [authorized, setAuthorized] = useState(false); // ✅ FIXED POSITION
 
-  // 🔐 AUTH CHECK
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const tokenFromUrl = params.get("token");
-    const token = tokenFromUrl || localStorage.getItem("token");
-
-    if (!token) {
-      alert("Login required 🔐");
-      return;
-    }
-
-    try {
-      const user = JSON.parse(atob(token.split('.')[1]));
-
-      if (user.role !== "admin") {
-        alert("Admin only 🚫");
-        return;
-      }
-
-      setAuthorized(true); // ✅ allow UI
-
-      localStorage.setItem("token", token);
-
-      // clean URL for GitHub Pages
-      window.history.replaceState({}, document.title, "/iam-project/");
-
-    } catch (err) {
-      console.error(err);
-      alert("Invalid token ❌");
-    }
-  }, []);
-
-  // 📊 RISK DATA
   useEffect(() => {
     const fetchRisk = () => {
       fetch("https://threat-analyzer-backend.onrender.com/api/risk")
@@ -51,38 +22,25 @@ function Dashboard() {
 
     return () => clearInterval(interval);
   }, []);
+  const [users, setUsers] = useState([]);
 
-  // 👥 USERS DATA
-  useEffect(() => {
-    fetch("https://threat-analyzer-backend.onrender.com/api/users")
-      .then(res => res.json())
-      .then(data => setUsers(data))
-      .catch(err => console.error(err));
-  }, []);
-
+useEffect(() => {
+  fetch("https://threat-analyzer-backend.onrender.com/api/users")
+    .then(res => res.json())
+    .then(data => setUsers(data));
+}, []);
+<h3>🚨 Suspicious Users</h3>
+{users.map((u, i) => (
+  <p key={i}>
+    {u.email} → {u.event} ({u.count})
+  </p>
+))}
   const getColor = () => {
     if (!riskData) return "gray";
     if (riskData.risk === "HIGH") return "red";
     if (riskData.risk === "MEDIUM") return "orange";
     return "green";
   };
-
-  // 🚫 BLOCK UI IF NOT AUTHORIZED
-  if (!authorized) {
-    return (
-      <div style={{
-        height: "100vh",
-        background: "#0f172a",
-        color: "white",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        fontFamily: "Arial"
-      }}>
-        <h2>Access Denied 🚫</h2>
-      </div>
-    );
-  }
 
   return (
     <div style={{
@@ -127,11 +85,9 @@ function Dashboard() {
               borderRadius: "5px"
             }}></div>
           </div>
-
           <p style={{ color: "yellow", fontWeight: "bold" }}>
-            {riskData.alert}
-          </p>
-
+  {riskData.alert}
+</p>
           <p>Threat %: {riskData.percentage}%</p>
 
           <hr style={{ margin: "15px 0", borderColor: "#334155" }} />
@@ -143,17 +99,6 @@ function Dashboard() {
       ) : (
         <p>Loading...</p>
       )}
-
-      {/* 👥 USERS SECTION */}
-      <div style={{ marginTop: "30px" }}>
-        <h3>🚨 Suspicious Users</h3>
-        {users.map((u, i) => (
-          <p key={i}>
-            {u.email} → {u.event} ({u.count})
-          </p>
-        ))}
-      </div>
-
     </div>
   );
 }
