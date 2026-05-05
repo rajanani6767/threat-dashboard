@@ -1,14 +1,10 @@
 import { useEffect, useState } from "react";
-const token = localStorage.getItem("token");
-
-if (!token) {
-  alert("Login first");
-  window.location.href = "YOUR_MFA_LOGIN_URL"; // 🔥 redirect to MFA
-}
 
 function Dashboard() {
   const [riskData, setRiskData] = useState(null);
+  const [users, setUsers] = useState([]);
 
+  // 📊 RISK DATA
   useEffect(() => {
     const fetchRisk = () => {
       fetch("https://threat-analyzer-backend.onrender.com/api/risk")
@@ -22,19 +18,15 @@ function Dashboard() {
 
     return () => clearInterval(interval);
   }, []);
-  const [users, setUsers] = useState([]);
 
-useEffect(() => {
-  fetch("https://threat-analyzer-backend.onrender.com/api/users")
-    .then(res => res.json())
-    .then(data => setUsers(data));
-}, []);
-<h3>🚨 Suspicious Users</h3>
-{users.map((u, i) => (
-  <p key={i}>
-    {u.email} → {u.event} ({u.count})
-  </p>
-))}
+  // 👥 USERS DATA
+  useEffect(() => {
+    fetch("https://threat-analyzer-backend.onrender.com/api/users")
+      .then(res => res.json())
+      .then(data => setUsers(data))
+      .catch(err => console.error(err));
+  }, []);
+
   const getColor = () => {
     if (!riskData) return "gray";
     if (riskData.risk === "HIGH") return "red";
@@ -54,51 +46,29 @@ useEffect(() => {
       fontFamily: "Arial"
     }}>
 
-      <h1 style={{ fontSize: "40px", marginBottom: "20px" }}>
-        🚨 Threat Dashboard
-      </h1>
+      <h1>🚨 Threat Dashboard</h1>
 
       {riskData ? (
-        <div style={{
-          background: "#1e293b",
-          padding: "30px",
-          borderRadius: "12px",
-          width: "300px",
-          textAlign: "center",
-          boxShadow: "0 0 20px rgba(0,0,0,0.5)"
-        }}>
-          
+        <div>
           <h2 style={{ color: getColor() }}>
             Risk: {riskData.risk}
           </h2>
-
-          <div style={{
-            height: "10px",
-            background: "#334155",
-            borderRadius: "5px",
-            margin: "15px 0"
-          }}>
-            <div style={{
-              width: `${riskData.percentage}%`,
-              height: "100%",
-              background: getColor(),
-              borderRadius: "5px"
-            }}></div>
-          </div>
-          <p style={{ color: "yellow", fontWeight: "bold" }}>
-  {riskData.alert}
-</p>
+          <p>{riskData.alert}</p>
           <p>Threat %: {riskData.percentage}%</p>
-
-          <hr style={{ margin: "15px 0", borderColor: "#334155" }} />
-
-          <p>🔐 OTP Failures: {riskData.otpFails}</p>
-          <p>⚠️ Login Failures: {riskData.loginFails}</p>
-
         </div>
       ) : (
         <p>Loading...</p>
       )}
+
+      <div>
+        <h3>🚨 Suspicious Users</h3>
+        {users.map((u, i) => (
+          <p key={i}>
+            {u.email} → {u.event} ({u.count})
+          </p>
+        ))}
+      </div>
+
     </div>
   );
 }
