@@ -8,7 +8,7 @@ function Dashboard() {
       fetch("https://threat-analyzer-backend.onrender.com/api/risk")
         .then(res => res.json())
         .then(data => setRiskData(data))
-        .catch(err => console.error("Error:", err));
+        .catch(err => console.error(err));
     };
 
     fetchRisk();
@@ -16,18 +16,79 @@ function Dashboard() {
 
     return () => clearInterval(interval);
   }, []);
+  const [users, setUsers] = useState([]);
+
+useEffect(() => {
+  fetch("https://threat-analyzer-backend.onrender.com/api/users")
+    .then(res => res.json())
+    .then(data => setUsers(data));
+}, []);
+<h3>🚨 Suspicious Users</h3>
+{users.map((u, i) => (
+  <p key={i}>
+    {u.email} → {u.event} ({u.count})
+  </p>
+))}
+  const getColor = () => {
+    if (!riskData) return "gray";
+    if (riskData.risk === "HIGH") return "red";
+    if (riskData.risk === "MEDIUM") return "orange";
+    return "green";
+  };
 
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial" }}>
-      <h1>🚨 Threat Dashboard</h1>
+    <div style={{
+      minHeight: "100vh",
+      background: "#0f172a",
+      color: "white",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      flexDirection: "column",
+      fontFamily: "Arial"
+    }}>
+
+      <h1 style={{ fontSize: "40px", marginBottom: "20px" }}>
+        🚨 Threat Dashboard
+      </h1>
 
       {riskData ? (
-        <div>
-          <h2>Risk Level: {riskData.risk}</h2>
-          <h3>Threat %: {riskData.percentage}%</h3>
+        <div style={{
+          background: "#1e293b",
+          padding: "30px",
+          borderRadius: "12px",
+          width: "300px",
+          textAlign: "center",
+          boxShadow: "0 0 20px rgba(0,0,0,0.5)"
+        }}>
+          
+          <h2 style={{ color: getColor() }}>
+            Risk: {riskData.risk}
+          </h2>
 
-          <p>OTP Failures: {riskData.otpFails}</p>
-          <p>Login Failures: {riskData.loginFails}</p>
+          <div style={{
+            height: "10px",
+            background: "#334155",
+            borderRadius: "5px",
+            margin: "15px 0"
+          }}>
+            <div style={{
+              width: `${riskData.percentage}%`,
+              height: "100%",
+              background: getColor(),
+              borderRadius: "5px"
+            }}></div>
+          </div>
+          <p style={{ color: "yellow", fontWeight: "bold" }}>
+  {riskData.alert}
+</p>
+          <p>Threat %: {riskData.percentage}%</p>
+
+          <hr style={{ margin: "15px 0", borderColor: "#334155" }} />
+
+          <p>🔐 OTP Failures: {riskData.otpFails}</p>
+          <p>⚠️ Login Failures: {riskData.loginFails}</p>
+
         </div>
       ) : (
         <p>Loading...</p>
