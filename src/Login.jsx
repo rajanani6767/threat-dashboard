@@ -17,7 +17,13 @@ function Login({ onAccess }) {
     <div style={styles.container}>
       <div style={styles.card}>
 
-        <h1>🔐 Security Dashboard Access</h1>
+       <h1 style={styles.title}>
+  🔐 Security Dashboard Access
+</h1>
+
+<p style={styles.demoKey}>
+  Demo Access Key: <b>DEMO2026</b>
+</p>
 
         <p style={styles.subtitle}>
           Authorized Demo Access Only
@@ -52,6 +58,19 @@ const styles = {
     fontFamily: "Arial",
     color: "white"
   },
+  title: {
+  fontSize: "42px",
+  lineHeight: "50px",
+  marginBottom: "10px",
+  fontWeight: "bold"
+},
+
+demoKey: {
+  marginTop: "10px",
+  color: "#facc15",
+  fontSize: "16px",
+  fontWeight: "bold"
+},
 
   card: {
     background: "#1e293b",
