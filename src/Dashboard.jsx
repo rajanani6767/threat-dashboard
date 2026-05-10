@@ -57,10 +57,9 @@ function Dashboard() {
     <div style={styles.container}>
 
       {/* 🔹 SIDEBAR */}
-     <p style={{ color: "#94a3b8" }}>Dashboard Overview</p>
-<p style={{ color: "#94a3b8" }}>Threat Alerts</p>
-<p style={{ color: "#94a3b8" }}>Security Logs</p>
-
+     <div style={styles.menuItem}>Dashboard Overview</div>
+<div style={styles.menuItem}>Threat Alerts</div>
+<div style={styles.menuItem}>Security Logs</div>
       {/* 🔹 MAIN CONTENT */}
       <div style={styles.main}>
 
@@ -125,10 +124,17 @@ function Card({ title, value, color }) {
 // 🔐 MASK EMAIL (privacy)
 function maskEmail(email) {
   if (!email) return "";
-  const [name, domain] = email.split("@");
-  return name.slice(0, 3) + "***@" + domain;
-}
 
+  // convert to lowercase
+  email = email.toLowerCase().trim();
+
+  const [name, domain] = email.split("@");
+
+  // keep first 3 chars only
+  const maskedName = name.slice(0, 3) + "***";
+
+  return `${maskedName}@${domain}`;
+}
 // 🎨 STYLES
 const styles = {
   container: {
@@ -171,18 +177,27 @@ const styles = {
     borderRadius: "10px"
   },
   tableHeader: {
-    display: "flex",
-    justifyContent: "space-between",
+    
+    display: "grid",
+gridTemplateColumns: "2fr 1fr 80px",
+alignItems: "center",
     borderBottom: "2px solid #334155",
     paddingBottom: "10px",
     fontWeight: "bold"
   },
+  menuItem: {
+  color: "#94a3b8",
+  marginTop: "18px",
+  fontSize: "18px",
+  fontWeight: "500"
+},
   row: {
-    display: "flex",
-    justifyContent: "space-between",
-    padding: "10px 0",
-    borderBottom: "1px solid #334155"
-  }
+  display: "grid",
+  gridTemplateColumns: "2fr 1fr 80px",
+  alignItems: "center",
+  padding: "10px 0",
+  borderBottom: "1px solid #334155"
+},
 };
 
 export default Dashboard;
