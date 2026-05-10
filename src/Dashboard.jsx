@@ -57,13 +57,9 @@ function Dashboard() {
     <div style={styles.container}>
 
       {/* 🔹 SIDEBAR */}
-      <div style={styles.sidebar}>
-        <h2>🔐 SOC Panel</h2>
-        <p>Dashboard</p>
-        <p>Logs</p>
-        <p>Alerts</p>
-        <p>Settings</p>
-      </div>
+     <p style={{ color: "#94a3b8" }}>Dashboard Overview</p>
+<p style={{ color: "#94a3b8" }}>Threat Alerts</p>
+<p style={{ color: "#94a3b8" }}>Security Logs</p>
 
       {/* 🔹 MAIN CONTENT */}
       <div style={styles.main}>
