@@ -57,9 +57,13 @@ function Dashboard() {
     <div style={styles.container}>
 
       {/* 🔹 SIDEBAR */}
-     <div style={styles.menuItem}>Dashboard Overview</div>
-<div style={styles.menuItem}>Threat Alerts</div>
-<div style={styles.menuItem}>Security Logs</div>
+     <div style={styles.sidebar}>
+  <h2>🔐 SOC Panel</h2>
+
+  <div style={styles.menuItem}>Dashboard Overview</div>
+  <div style={styles.menuItem}>Threat Alerts</div>
+  <div style={styles.menuItem}>Security Logs</div>
+</div>
       {/* 🔹 MAIN CONTENT */}
       <div style={styles.main}>
 
@@ -145,10 +149,13 @@ const styles = {
     fontFamily: "Arial"
   },
   sidebar: {
-    width: "200px",
-    background: "#1e293b",
-    padding: "20px"
-  },
+  width: "240px",
+  background: "#1e293b",
+  padding: "25px",
+  display: "flex",
+  flexDirection: "column",
+  gap: "10px"
+},
   main: {
     flex: 1,
     padding: "20px"
