@@ -12,7 +12,7 @@ function Dashboard() {
         .then(setRiskData)
         .catch(console.error);
 
-      fetch("https://threat-analyzer-backend.onrender.com/api/users")
+      fetch("https://threat-analyzer-backend.onrender.com/api/user-risk")
         .then(res => res.json())
         .then(setUsers)
         .catch(console.error);
