@@ -47,7 +47,7 @@ function Dashboard() {
     }
 
     if (riskData.risk === "HIGH") {
-      return "🔒 Account Temporarily Locked";
+      return "🚨 High Risk Activity Detected";
     }
 
     return "✅ System Secure";
