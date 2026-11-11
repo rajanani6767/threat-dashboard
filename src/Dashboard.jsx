@@ -97,18 +97,33 @@ function Dashboard() {
           <h3>📋 Suspicious Users</h3>
 
           <div style={styles.tableHeader}>
-            <span>Email</span>
-            <span>Event</span>
-            <span>Count</span>
-          </div>
+  <span>Email</span>
+  <span>OTP Failures</span>
+  <span>Login Failures</span>
+  <span>Last Attempt</span>
+</div>
 
-          {users.map((u, i) => (
-            <div key={i} style={styles.row}>
-              <span>{maskEmail(u.email)}</span>
-              <span>{u.event}</span>
-              <span>{u.count}</span>
-            </div>
-          ))}
+{users.map((u, i) => (
+  <div key={i} style={styles.row}>
+    <span>{maskEmail(u.email)}</span>
+    <span>{u.otpFails}</span>
+    <span>{u.loginFails}</span>
+    <span>
+      {u.lastAttempt
+        ? new Date(u.lastAttempt).toLocaleString("en-IN", {
+            timeZone: "Asia/Kolkata",
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+          })
+        : "--"}
+    </span>
+  </div>
+))}
         </div>
 
       </div>
@@ -184,25 +199,21 @@ const styles = {
     borderRadius: "10px"
   },
   tableHeader: {
-    
-    display: "grid",
-gridTemplateColumns: "2fr 1fr 80px",
-alignItems: "center",
-    borderBottom: "2px solid #334155",
-    paddingBottom: "10px",
-    fontWeight: "bold"
-  },
-  menuItem: {
-  color: "#94a3b8",
-  marginTop: "18px",
-  fontSize: "18px",
-  fontWeight: "500"
-},
-  row: {
   display: "grid",
-  gridTemplateColumns: "2fr 1fr 80px",
+  gridTemplateColumns: "2fr 1.5fr 80px 1.5fr",
   alignItems: "center",
-  padding: "10px 0",
+  gap: "10px",
+  borderBottom: "2px solid #334155",
+  paddingBottom: "10px",
+  fontWeight: "bold"
+},
+
+row: {
+  display: "grid",
+  gridTemplateColumns: "2fr 1.5fr 80px 1.5fr",
+  alignItems: "center",
+  gap: "10px",
+  padding: "12px 0",
   borderBottom: "1px solid #334155"
 },
 };
